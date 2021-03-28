@@ -1,5 +1,4 @@
 ﻿using System;
-
 namespace TypewiseAlert
 {
     public class FactoryManager
@@ -7,7 +6,7 @@ namespace TypewiseAlert
         public Object GetInstance(string className, string typeName)
         {
             Type typeAssembly = IntefaceFinderInExecutingAssembly.GetInterfaceInExecutingAssembly(className, typeName);
-            return (typeAssembly == null) ? throw new EntryPointNotFoundException("Inteface not found") : Activator.CreateInstance(typeAssembly);
+            return (typeAssembly == null) ? throw new EntryPointNotFoundException("class not found") : Activator.CreateInstance(typeAssembly);
         }
     }
 }
