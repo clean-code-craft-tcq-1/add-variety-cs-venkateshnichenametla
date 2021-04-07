@@ -1,11 +1,11 @@
 ﻿using System;
 namespace TypewiseAlert
 {
-    public class ControllerAlert : IAlert
+    public class ConsoleAlert : IAlert
     {
         public void PublishAlert(string breachType)
         {
-            Console.WriteLine("{0}\n", breachType);
+            Console.WriteLine("Breach is - " + breachType);
         }
     }
 }

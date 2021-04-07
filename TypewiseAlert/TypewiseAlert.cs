@@ -2,25 +2,26 @@
 {
     public class TypewiseAlert
     {
-        public static Constants.BreachType InferBreach(double value, double lowerLimit, double upperLimit)
+        public static string InferBreach(double value, double lowerLimit, double upperLimit)
         {
+            IBreach breachTypeInstance = FactoryManager.Instance.GetClassObject("Normal", "IBreach") as IBreach;
             if (value < lowerLimit)
-                return Constants.BreachType.Low;
-            if (value > upperLimit)
-                return Constants.BreachType.High;
-            return Constants.BreachType.Normal;
+                breachTypeInstance = FactoryManager.Instance.GetClassObject("Low", "IBreach") as IBreach;
+            else if (value > upperLimit)
+                breachTypeInstance = FactoryManager.Instance.GetClassObject("High", "IBreach") as IBreach;
+            return breachTypeInstance.GetBreachType();
         }
 
-        public static Constants.BreachType ClassifyTemperatureBreach(Constants.CoolingType coolingType, double temperatureInC)
+        public static string ClassifyTemperatureBreach(string coolingType, double temperatureInC)
         {
-            ICoolingType coolingTypeInstance = new FactoryManager().GetInstance(coolingType.ToString(), "ICoolingType") as ICoolingType;
+            ICoolingType coolingTypeInstance = FactoryManager.Instance.GetClassObject(coolingType, "ICoolingType") as ICoolingType;
             return InferBreach(temperatureInC, coolingTypeInstance.LowerLimit, coolingTypeInstance.UpperLimit);
         }
-        public static bool CheckAndAlert(Constants.AlertTarget alertTarget, BatteryCharacter batteryChar, double temperatureInC)
+        public static void CheckAndAlert(string alertTarget, BatteryCharacter batteryChar, double temperatureInC)
         {
-            Constants.BreachType breachType = ClassifyTemperatureBreach(batteryChar.coolingType, temperatureInC);
-            IAlert alert = new FactoryManager().GetInstance(alertTarget.ToString(), "IAlert") as IAlert;
-            return alert.IsAlertPublished(breachType);
+            string breachType = ClassifyTemperatureBreach(batteryChar.coolingType, temperatureInC);
+            IAlert alert = FactoryManager.Instance.GetClassObject(alertTarget, "IAlert") as IAlert;
+            alert.PublishAlert(breachType);
         }
     }
 }

@@ -3,5 +3,7 @@
     public interface IBreach
     {
         string GetBreachMessage();
+
+        string GetBreachType();
     }
 }

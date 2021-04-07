@@ -2,6 +2,6 @@
 {
     public interface IAlert
     {
-        bool IsAlertPublished(Constants.BreachType breachType);
+        void PublishAlert(string breachType);
     }
 }
