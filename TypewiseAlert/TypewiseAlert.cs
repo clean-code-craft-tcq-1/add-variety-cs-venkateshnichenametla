@@ -2,10 +2,10 @@
 {
     public class TypewiseAlert
     {
-        public IAlert alert;
-        public TypewiseAlert(string alertType)
+        private IAlert _alert;
+        public TypewiseAlert(IAlert alert)
         {
-            alert = FactoryManager.Instance.GetClassObject(alertType, "IAlert") as IAlert;
+            _alert = alert;
         }
 
         public TypewiseAlert()
@@ -31,7 +31,7 @@
         public void CheckAndAlert(BatteryCharacter batteryChar, double temperatureInC)
         {
             string breachType = ClassifyTemperatureBreach(batteryChar.coolingType, temperatureInC);
-            alert.PublishAlert(breachType);
+            _alert.PublishAlert(breachType);
         }
     }
 }

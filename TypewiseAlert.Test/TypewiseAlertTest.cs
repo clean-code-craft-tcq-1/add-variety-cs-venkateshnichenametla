@@ -43,10 +43,11 @@ namespace TypewiseAlert.Test
         public void CheckFakeAlertPublish()
         {
             BatteryCharacter batteryCharacter = new BatteryCharacter("HiActiveCooling", "Bosch");
-            TypewiseAlert typewiseAlert = new TypewiseAlert("FakeAlert");
+            IAlert fakeAlert = new FakeAlert();
+            TypewiseAlert typewiseAlert = new TypewiseAlert(fakeAlert);
             typewiseAlert.CheckAndAlert(batteryCharacter, 10);
-            FakeAlert fakeAlert = typewiseAlert.alert as FakeAlert;
-            Assert.True(fakeAlert.isCalledAtleastOnce);
+            FakeAlert fakeAlerter = fakeAlert as FakeAlert;
+            Assert.True(fakeAlerter.isCalledAtleastOnce);
         }
         [Fact]
         public void CheckAndAlertException()
