@@ -1,6 +1,6 @@
 ﻿namespace TypewiseAlert
 {
-    public class EmailAlert : IAlert
+    public class EmailAlert : IBreachObserver
     {
         public void PublishAlert(string breachType)
         {

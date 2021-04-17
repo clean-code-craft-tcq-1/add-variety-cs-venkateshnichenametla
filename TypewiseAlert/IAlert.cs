@@ -1,6 +1,6 @@
 ﻿namespace TypewiseAlert
 {
-    public interface IAlert
+    public interface IBreachObserver
     {
         void PublishAlert(string breachType);
     }

@@ -1,60 +1,76 @@
 using Xunit;
 namespace TypewiseAlert.Test
 {
-    public class TypewiseAlertTest
+    public class TypeWiseAlertTest
     {
         [Fact]
         public void InfersBreachAsPerLimitsLow()
         {
-            TypewiseAlert typewiseAlert = new TypewiseAlert();
-            Assert.True(typewiseAlert.InferBreach(12, 15, 30) == "Low");
+            TypeWiseAlert typeWiseAlert = new TypeWiseAlert();
+            Assert.True(typeWiseAlert.InferBreach(12, 15, 30) == "Low");
         }
         [Fact]
         public void InfersBreachAsPerLimitsNormal()
         {
-            TypewiseAlert typewiseAlert = new TypewiseAlert();
-            Assert.True(typewiseAlert.InferBreach(18, 15, 30) == "Normal");
+            TypeWiseAlert typeWiseAlert = new TypeWiseAlert();
+            Assert.True(typeWiseAlert.InferBreach(18, 15, 30) == "Normal");
         }
         [Fact]
         public void InfersBreachAsPerLimitsHigh()
         {
-            TypewiseAlert typewiseAlert = new TypewiseAlert();
-            Assert.True(typewiseAlert.InferBreach(35, 15, 30) == "High");
+            TypeWiseAlert typeWiseAlert = new TypeWiseAlert();
+            Assert.True(typeWiseAlert.InferBreach(35, 15, 30) == "High");
         }
         [Fact]
         public void ClassifyTemperaturePassive()
         {
-            TypewiseAlert typewiseAlert = new TypewiseAlert();
-            Assert.True(typewiseAlert.ClassifyTemperatureBreach("PassiveCooling", -5) == "Low");
+            TypeWiseAlert typeWiseAlert = new TypeWiseAlert();
+            Assert.True(typeWiseAlert.ClassifyTemperatureBreach("PassiveCooling", -5) == "Low");
         }
         [Fact]
         public void ClassifyTemperatureMediumActive()
         {
-            TypewiseAlert typewiseAlert = new TypewiseAlert();
-            Assert.True(typewiseAlert.ClassifyTemperatureBreach("MediumActiveCooling", 10) == "Normal");
+            TypeWiseAlert typeWiseAlert = new TypeWiseAlert();
+            Assert.True(typeWiseAlert.ClassifyTemperatureBreach("MediumActiveCooling", 10) == "Normal");
         }
         [Fact]
         public void ClassifyTemperatureHiActive()
         {
-            TypewiseAlert typewiseAlert = new TypewiseAlert();
-            Assert.True(typewiseAlert.ClassifyTemperatureBreach("HiActiveCooling", 50) == "High");
+            TypeWiseAlert typeWiseAlert = new TypeWiseAlert();
+            Assert.True(typeWiseAlert.ClassifyTemperatureBreach("HiActiveCooling", 50) == "High");
         }
         [Fact]
-        public void CheckFakeAlertPublish()
+        public void CheckAndAlertOfFakeAlert()
         {
             BatteryCharacter batteryCharacter = new BatteryCharacter("HiActiveCooling", "Bosch");
-            IAlert fakeAlert = new FakeAlert();
-            TypewiseAlert typewiseAlert = new TypewiseAlert(fakeAlert);
-            typewiseAlert.CheckAndAlert(batteryCharacter, 10);
-            FakeAlert fakeAlerter = fakeAlert as FakeAlert;
+            IBreachObserver breachObserver = new FakeAlert();
+            TypeWiseAlert typeWiseAlert = new TypeWiseAlert(breachObserver);
+            typeWiseAlert.CheckAndAlert(batteryCharacter, 10);
+            FakeAlert fakeAlerter = breachObserver as FakeAlert;
             Assert.True(fakeAlerter.isCalledAtleastOnce);
+        }
+
+        [Fact]
+        public void CheckAndAlertOfCompositeAlert()
+        {
+            IBreachObserver emailAlert = new EmailAlert();
+            IBreachObserver consoleAlert = new ConsoleAlert();
+            IBreachObserver controllerAlert = new ControllerAlert();
+            CompositeAlert compositeAlert = new CompositeAlert();
+            compositeAlert.AddBreachObserver(emailAlert);
+            compositeAlert.AddBreachObserver(consoleAlert);
+            compositeAlert.AddBreachObserver(controllerAlert);
+            TypeWiseAlert typeWiseAlert = new TypeWiseAlert(compositeAlert);
+            BatteryCharacter batteryCharacter = new BatteryCharacter("HiActiveCooling", "Bosch");
+            var exception = Record.Exception(() => typeWiseAlert.CheckAndAlert(batteryCharacter, 85));
+            Assert.Null(exception);
         }
         [Fact]
         public void CheckAndAlertException()
         {
             BatteryCharacter batteryCharacter = new BatteryCharacter("test", "abc");
-            TypewiseAlert typewiseAlert = new TypewiseAlert();
-            var ex = Record.Exception(() => typewiseAlert.CheckAndAlert(batteryCharacter, 10));
+            TypeWiseAlert typeWiseAlert = new TypeWiseAlert();
+            var ex = Record.Exception(() => typeWiseAlert.CheckAndAlert(batteryCharacter, 10));
             Assert.NotNull(ex);
         }
     }

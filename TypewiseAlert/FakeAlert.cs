@@ -1,6 +1,6 @@
 ﻿namespace TypewiseAlert
 {
-    public class FakeAlert : IAlert
+    public class FakeAlert : IBreachObserver
     {
         public bool isCalledAtleastOnce = false;
 

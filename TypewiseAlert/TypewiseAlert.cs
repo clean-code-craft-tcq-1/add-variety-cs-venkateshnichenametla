@@ -1,17 +1,13 @@
 ﻿namespace TypewiseAlert
 {
-    public class TypewiseAlert
+    public class TypeWiseAlert
     {
-        private IAlert _alert;
-        public TypewiseAlert(IAlert alert)
+        private IBreachObserver _breachObserver;
+        public TypeWiseAlert(IBreachObserver breachObserver)
         {
-            _alert = alert;
+            _breachObserver = breachObserver;
         }
-
-        public TypewiseAlert()
-        {
-
-        }
+        public TypeWiseAlert()  {  }
 
         public string InferBreach(double value, double lowerLimit, double upperLimit)
         {
@@ -31,7 +27,7 @@
         public void CheckAndAlert(BatteryCharacter batteryChar, double temperatureInC)
         {
             string breachType = ClassifyTemperatureBreach(batteryChar.coolingType, temperatureInC);
-            _alert.PublishAlert(breachType);
+            _breachObserver.PublishAlert(breachType);
         }
     }
 }

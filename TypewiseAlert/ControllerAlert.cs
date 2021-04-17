@@ -1,7 +1,7 @@
 ﻿using System;
 namespace TypewiseAlert
 {
-    public class ControllerAlert : IAlert
+    public class ControllerAlert : IBreachObserver
     {
         public void PublishAlert(string breachType)
         {
